@@ -70,7 +70,7 @@ class CustomersControllerTest {
         // Then
         StepVerifier.create(result)
                 .assertNext(response -> {
-                    assertEquals(200, response.getStatusCodeValue());
+                    assertEquals(200, response.getStatusCode().value());
                     @SuppressWarnings("unchecked")
                     java.util.Map<String, Object> body = (java.util.Map<String, Object>) response.getBody();
                     assertEquals(partyId.toString(), body.get("partyId"));
@@ -113,7 +113,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(customerService).updateCustomer(command);
@@ -133,7 +133,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).addAddress(partyId, command);
@@ -154,7 +154,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).updateAddress(partyId, addressId, command);
@@ -174,7 +174,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).removeAddress(partyId, addressId);
@@ -194,7 +194,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).addEmail(partyId, command);
@@ -215,7 +215,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).updateEmail(partyId, emailId, command);
@@ -235,7 +235,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).removeEmail(partyId, emailId);
@@ -255,7 +255,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).addPhone(partyId, command);
@@ -276,7 +276,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).updatePhone(partyId, phoneId, command);
@@ -296,7 +296,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).removePhone(partyId, phoneId);
@@ -316,7 +316,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(contactService).setPreferredChannel(partyId, command);
@@ -335,7 +335,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -354,7 +354,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -373,7 +373,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -392,7 +392,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -411,7 +411,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -430,7 +430,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -449,7 +449,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(statusService).updateStatus(any(UpdateStatusCommand.class));
@@ -470,7 +470,7 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
 
         verify(consentService).updateConsent(partyId, consentId, command);
@@ -492,7 +492,7 @@ class CustomersControllerTest {
         Mono<ResponseEntity<Object>> result = newController.updateCustomer(command);
 
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCodeValue()))
+                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
                 .verifyComplete();
     }
 }

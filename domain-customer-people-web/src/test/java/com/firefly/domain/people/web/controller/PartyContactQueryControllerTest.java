@@ -50,7 +50,7 @@ class PartyContactQueryControllerTest {
         // Then
         StepVerifier.create(result)
                 .assertNext(entity -> {
-                    assertEquals(200, entity.getStatusCodeValue());
+                    assertEquals(200, entity.getStatusCode().value());
                     assertNotNull(entity.getBody());
                 })
                 .verifyComplete();
@@ -90,7 +90,7 @@ class PartyContactQueryControllerTest {
         // Then
         StepVerifier.create(result)
                 .assertNext(entity -> {
-                    assertEquals(200, entity.getStatusCodeValue());
+                    assertEquals(200, entity.getStatusCode().value());
                     assertNotNull(entity.getBody());
                 })
                 .verifyComplete();
@@ -130,7 +130,7 @@ class PartyContactQueryControllerTest {
         // Then
         StepVerifier.create(result)
                 .assertNext(entity -> {
-                    assertEquals(200, entity.getStatusCodeValue());
+                    assertEquals(200, entity.getStatusCode().value());
                     assertNotNull(entity.getBody());
                 })
                 .verifyComplete();
@@ -170,7 +170,7 @@ class PartyContactQueryControllerTest {
         // Then
         StepVerifier.create(result)
                 .assertNext(entity -> {
-                    assertEquals(200, entity.getStatusCodeValue());
+                    assertEquals(200, entity.getStatusCode().value());
                     assertNotNull(entity.getBody());
                 })
                 .verifyComplete();
@@ -210,7 +210,7 @@ class PartyContactQueryControllerTest {
         // Then
         StepVerifier.create(result)
                 .assertNext(entity -> {
-                    assertEquals(200, entity.getStatusCodeValue());
+                    assertEquals(200, entity.getStatusCode().value());
                     assertNotNull(entity.getBody());
                 })
                 .verifyComplete();
