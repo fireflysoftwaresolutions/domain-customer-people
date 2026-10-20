@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.firefly</groupId>
         <artifactId>firefly-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
     <artifactId>domain-customer-people</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>domain-customer-people-core</module>
@@ -28,7 +28,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <core-common-reference-master-data.version>
-            1.0.0-SNAPSHOT
+            1.1.0-SNAPSHOT
         </core-common-reference-master-data.version>
     </properties>
 
