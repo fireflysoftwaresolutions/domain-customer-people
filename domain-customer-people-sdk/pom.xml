@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>domain-customer-people-sdk</artifactId>
+    <name>domain-customer-people-sdk</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>domain-customer-people</artifactId>
+    <name>domain-customer-people</name>
     <version>26.10.3</version>
     <packaging>pom</packaging>
     <modules>

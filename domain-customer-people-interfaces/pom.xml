@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>domain-customer-people-interfaces</artifactId>
+    <name>domain-customer-people-interfaces</name>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
