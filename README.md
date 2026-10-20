@@ -157,9 +157,9 @@ api-configuration:
 | Profile | Logging | Swagger | Notes |
 |---------|---------|---------|-------|
 | `default` | INFO | Enabled | Standard development |
-| `dev` | DEBUG (com.firefly, R2DBC, Flyway) | Enabled | Verbose debugging |
-| `testing` | DEBUG (com.firefly) | Enabled | Test environments |
-| `prod` | WARN (root), INFO (com.firefly) | Disabled | Production |
+| `dev` | DEBUG (io.fireflysoftware, R2DBC, Flyway) | Enabled | Verbose debugging |
+| `testing` | DEBUG (io.fireflysoftware) | Enabled | Test environments |
+| `prod` | WARN (root), INFO (io.fireflysoftware) | Disabled | Production |
 
 ### Build
 
@@ -270,7 +270,7 @@ The API supports idempotent requests via the `X-Idempotency-Key` header. When pr
 ### Package Structure
 
 ```
-com.firefly.domain.people
+io.fireflysoftware.domain.people
   +-- core
   |     +-- customer/             # Natural person services, commands, handlers, queries, sagas
   |     +-- business/             # Legal entity services, commands, handlers, sagas
@@ -346,5 +346,5 @@ Interactive API documentation is available (disabled in `prod` profile):
 
 - **Swagger UI**: `/swagger-ui.html` (tags sorted alphabetically, operations sorted by method)
 - **OpenAPI JSON**: `/v3/api-docs`
-- **Scanned packages**: `com.firefly.domain.people.web.controller`
+- **Scanned packages**: `io.fireflysoftware.domain.people.web.controller`
 - **Paths matched**: `/api/**`
