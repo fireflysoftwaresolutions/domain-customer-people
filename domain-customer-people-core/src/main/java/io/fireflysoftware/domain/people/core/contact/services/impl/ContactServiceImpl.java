@@ -55,8 +55,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Mono<Void> updateAddress(UUID partyId, UUID addressId, UpdateAddressCommand addressData) {
+        UpdateAddressCommand prepared = addressData.withAddressId(addressId).withPartyId(partyId);
         StepInputs inputs = StepInputs.builder()
-                .forStepId("updateAddress", addressData.withAddressId(addressId).withPartyId(partyId))
+                .forStepId("readAddress", prepared)
+                .forStepId("updateAddress", prepared)
                 .build();
 
         return engine.execute("UpdateAddressSaga", inputs)
@@ -83,8 +85,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Mono<Void> updateEmail(UUID partyId, UUID emailId, UpdateEmailCommand emailData) {
+        UpdateEmailCommand prepared = emailData.withEmailContactId(emailId).withPartyId(partyId);
         StepInputs inputs = StepInputs.builder()
-                .forStepId("updateEmail", emailData.withEmailContactId(emailId).withPartyId(partyId))
+                .forStepId("readEmail", prepared)
+                .forStepId("updateEmail", prepared)
                 .build();
 
         return engine.execute("UpdateEmailSaga", inputs)
@@ -111,8 +115,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Mono<Void> updatePhone(UUID partyId, UUID phoneId, UpdatePhoneCommand phoneData) {
+        UpdatePhoneCommand prepared = phoneData.withPhoneContactId(phoneId).withPartyId(partyId);
         StepInputs inputs = StepInputs.builder()
-                .forStepId("updatePhone", phoneData.withPhoneContactId(phoneId).withPartyId(partyId))
+                .forStepId("readPhone", prepared)
+                .forStepId("updatePhone", prepared)
                 .build();
 
         return engine.execute("UpdatePhoneSaga", inputs)

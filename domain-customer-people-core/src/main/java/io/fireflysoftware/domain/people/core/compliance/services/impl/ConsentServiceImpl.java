@@ -33,6 +33,7 @@ public class ConsentServiceImpl implements ConsentService {
         );
 
         StepInputs inputs = StepInputs.builder()
+                .forStepId("readConsent", merged)
                 .forStepId(STEP_UPDATE_CONSENT, merged)
                 .build();
 
