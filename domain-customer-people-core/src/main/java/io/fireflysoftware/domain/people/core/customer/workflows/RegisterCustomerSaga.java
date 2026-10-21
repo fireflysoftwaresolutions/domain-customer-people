@@ -20,6 +20,10 @@ import io.fireflysoftware.domain.people.core.party.commands.RemovePartyGroupMemb
 import io.fireflysoftware.domain.people.core.party.commands.RemovePartyRelationshipCommand;
 import io.fireflysoftware.domain.people.core.status.commands.RegisterPartyStatusEntryCommand;
 import io.fireflysoftware.domain.people.core.customer.commands.RegisterNaturalPersonCommand;
+import io.fireflysoftware.domain.people.core.attribute.commands.RegisterPartyAttributeCommand;
+import io.fireflysoftware.domain.people.core.attribute.commands.RemovePartyAttributeCommand;
+import io.fireflysoftware.domain.people.core.classification.commands.RegisterPartyIndustryClassificationCommand;
+import io.fireflysoftware.domain.people.core.classification.commands.RemovePartyIndustryClassificationCommand;
 import io.fireflysoftware.domain.people.core.party.commands.RegisterPartyCommand;
 
 import org.fireflyframework.cqrs.command.CommandBus;
@@ -226,6 +230,34 @@ public class RegisterCustomerSaga {
 
     public Mono<Void> removePartyGroupMembership(UUID partyGroupMembershipId, ExecutionContext ctx) {
         return commandBus.send(new RemovePartyGroupMembershipCommand((UUID) ctx.getVariable(CTX_PARTY_ID), partyGroupMembershipId));
+    }
+
+    @SagaStep(id = "registerIndustryClassification", compensate = "removeIndustryClassification", dependsOn = STEP_REGISTER_PARTY)
+    @StepEvent(type = "industryClassification.registered")
+    public Mono<UUID> registerIndustryClassification(RegisterPartyIndustryClassificationCommand cmd, ExecutionContext ctx) {
+        return cmd == null
+                ? Mono.just(SKIPPED_STEP_SENTINEL)
+                : commandBus.send(cmd.withPartyId((UUID) ctx.getVariable(CTX_PARTY_ID)));
+    }
+
+    public Mono<Void> removeIndustryClassification(UUID classificationId, ExecutionContext ctx) {
+        return isSkipped(classificationId)
+                ? Mono.empty()
+                : commandBus.send(new RemovePartyIndustryClassificationCommand((UUID) ctx.getVariable(CTX_PARTY_ID), classificationId));
+    }
+
+    @SagaStep(id = "registerPartyAttribute", compensate = "removePartyAttribute", dependsOn = STEP_REGISTER_PARTY)
+    @StepEvent(type = "partyAttribute.registered")
+    public Mono<UUID> registerPartyAttribute(RegisterPartyAttributeCommand cmd, ExecutionContext ctx) {
+        return cmd == null
+                ? Mono.just(SKIPPED_STEP_SENTINEL)
+                : commandBus.send(cmd.withPartyId((UUID) ctx.getVariable(CTX_PARTY_ID)));
+    }
+
+    public Mono<Void> removePartyAttribute(UUID attributeId, ExecutionContext ctx) {
+        return isSkipped(attributeId)
+                ? Mono.empty()
+                : commandBus.send(new RemovePartyAttributeCommand((UUID) ctx.getVariable(CTX_PARTY_ID), attributeId));
     }
 
 }

@@ -47,7 +47,6 @@ class RegisterLegalEntityHandlerTest {
         cmd.setPartyId(partyId);
         cmd.setEmployeeRange("50-249");
         cmd.setAnnualRevenue(new BigDecimal("12345678.90"));
-        cmd.setCnaeCode("6201");
         cmd.setContactName("Jane Doe");
         cmd.setContactPosition("CFO");
         cmd.setContactEmail("jane.doe@acme.example");
@@ -69,7 +68,6 @@ class RegisterLegalEntityHandlerTest {
         LegalEntityDTO captured = captor.getValue();
         assertThat(captured.getEmployeeRange()).isEqualTo("50-249");
         assertThat(captured.getAnnualRevenue()).isEqualByComparingTo(new BigDecimal("12345678.90"));
-        assertThat(captured.getCnaeCode()).isEqualTo("6201");
         assertThat(captured.getContactName()).isEqualTo("Jane Doe");
         assertThat(captured.getContactPosition()).isEqualTo("CFO");
         assertThat(captured.getContactEmail()).isEqualTo("jane.doe@acme.example");

@@ -103,4 +103,19 @@ public class ClientFactory {
         return new ConsentCatalogApi(referenceMasterDataApiClient);
     }
 
+    @Bean
+    public IndustryClassificationsApi industryClassificationsApi() {
+        return new IndustryClassificationsApi(apiClient);
+    }
+
+    @Bean
+    public PartyAttributesApi partyAttributesApi() {
+        return new PartyAttributesApi(apiClient);
+    }
+
+    @Bean
+    public PartyHierarchyApi partyHierarchyApi() {
+        return new PartyHierarchyApi(apiClient);
+    }
+
 }

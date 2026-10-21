@@ -1,9 +1,9 @@
 <a href="https://fireflysoftware.io/openplatform/">
 <picture>
-  <source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-narrow-dark.svg">
-  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-narrow-light.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-dark.svg">
-  <img src="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-light.svg" alt="Firefly OpenPlatform - Domain Customer - People" width="100%">
+  <source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-narrow-dark.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-narrow-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-dark.svg">
+  <img src="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-light.svg" alt="Firefly OpenPlatform - Domain Customer - People" width="100%">
 </picture>
 </a>
 
@@ -28,8 +28,10 @@ Repository: [https://github.com/firefly-oss/domain-customer-people](https://gith
 - **Customer lifecycle management** -- register, update, and query natural persons with full contact, compliance, and relationship data.
 - **Business lifecycle management** -- register, update, and query legal entities (organizations) with identical contact and compliance capabilities.
 - **Contact information CRUD** -- addresses, emails, phones, identity documents, and preferred channel selection, all with saga-backed consistency.
-- **Party relationship management** -- register, update, and remove inter-party relationships.
-- **Status management** -- dormant, reactivate, deceased/defunct, closure request/confirm, lock/unlock transitions with audit reasons.
+- **Party relationship management** -- register, update, and remove ownership, control, parent, and officer relationships. A person can own a company, and a company can own a company. Compensation restores the previous relationship.
+- **Industry classification** -- store a scheme (`ISIC`, `NACE`, `NAICS`, `SIC`, `CNAE`, or `OTHER`) and a code. The scheme is not implied.
+- **Party attributes** -- employment, housing, loans, and debts are effective-dated attributes. Occupation and monthly income stay on the person. Names are `familyName` and `secondFamilyName`.
+- **Status management** -- dormant, reactivate, deceased/defunct, closure request/confirm, lock/unlock transitions. A status change closes the open history row; compensation deletes the new row and reopens the previous status.
 - **Compliance data** -- PEP (Politically Exposed Person) registration, economic activity links, and consent tracking.
 - **Saga-orchestrated transactions** -- every write operation is executed through the FireflyFramework `SagaEngine` with compensating steps for rollback on failure.
 - **CQRS architecture** -- commands dispatched via `CommandBus`, queries via `QueryBus`, with configurable timeouts and caching.

@@ -23,6 +23,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public Mono<SagaResult> updateStatus(UpdateStatusCommand updateStatusCommand) {
         StepInputs inputs = StepInputs.builder()
+                .forStepId("readOpenPartyStatus", updateStatusCommand)
                 .forStepId("updateStatus", updateStatusCommand)
                 .build();
         return engine.execute("UpdateStatusSaga", inputs);

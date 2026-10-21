@@ -50,6 +50,8 @@ public class BusinessServiceImpl implements BusinessService {
                 .forStepId("registerPartyProvider", ExpandEach.of(nullSafe(command.providers())))
                 .forStepId("registerPartyRelationship", ExpandEach.of(nullSafe(command.relationships())))
                 .forStepId("registerPartyGroupMembership", ExpandEach.of(nullSafe(command.groupMemberships())))
+                .forStepId("registerIndustryClassification", ExpandEach.of(nullSafe(command.industryClassifications())))
+                .forStepId("registerPartyAttribute", ExpandEach.of(nullSafe(command.attributes())))
                 .build();
 
         return engine.execute("RegisterCustomerSaga", inputs);
@@ -62,6 +64,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public Mono<SagaResult> updateBusiness(UpdateBusinessCommand command) {
         StepInputs inputs = StepInputs.builder()
+                .forStepId("readBusiness", command)
                 .forStepId("updateBusiness", command)
                 .build();
 

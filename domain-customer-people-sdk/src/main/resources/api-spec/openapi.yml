@@ -4314,10 +4314,10 @@
           "middleName": {
             "type": "string"
           },
-          "familyName1": {
+          "familyName": {
             "type": "string"
           },
-          "familyName2": {
+          "secondFamilyName": {
             "type": "string"
           },
           "dateOfBirth": {
@@ -4949,10 +4949,10 @@
           "middleName": {
             "type": "string"
           },
-          "familyName1": {
+          "familyName": {
             "type": "string"
           },
-          "familyName2": {
+          "secondFamilyName": {
             "type": "string"
           },
           "dateOfBirth": {

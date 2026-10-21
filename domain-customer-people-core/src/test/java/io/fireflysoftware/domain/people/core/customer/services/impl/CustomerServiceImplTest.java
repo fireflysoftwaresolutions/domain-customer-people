@@ -155,7 +155,9 @@ class CustomerServiceImplTest {
                 null, // consents
                 null, // providers
                 null, // relationships
-                null  // groupMemberships
+                null, // groupMemberships
+                null, // industryClassifications
+                null  // attributes
         );
 
         when(sagaResult.isSuccess()).thenReturn(true);

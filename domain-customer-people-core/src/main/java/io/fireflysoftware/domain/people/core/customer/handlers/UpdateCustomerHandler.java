@@ -31,7 +31,7 @@ public class UpdateCustomerHandler extends CommandHandler<UpdateCustomerCommand,
     @Override
     protected Mono<UUID> doHandle(UpdateCustomerCommand cmd) {
         // Core's PUT /natural-persons is a full-replace and rejects payloads missing @NotBlank
-        // fields like givenName / familyName1. Callers (BFF workflows) typically post a thin
+        // fields like givenName / familyName. Callers (BFF workflows) typically post a thin
         // patch with only the fields they want to change, so we fetch the existing record,
         // overlay the non-null patch fields, and send the merged DTO back. The (1:1) party
         // ↔ natural-person relationship lets us resolve naturalPersonId from partyId for free.

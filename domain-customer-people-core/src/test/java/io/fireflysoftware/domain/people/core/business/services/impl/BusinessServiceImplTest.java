@@ -97,7 +97,9 @@ class BusinessServiceImplTest {
                 null, // economicActivities
                 null, // providers
                 null, // relationships
-                null  // groupMemberships
+                null, // groupMemberships
+                null, // industryClassifications
+                null  // attributes
         );
 
         when(sagaEngine.execute(eq("RegisterCustomerSaga"), any(StepInputs.class)))

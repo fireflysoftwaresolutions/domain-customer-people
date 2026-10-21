@@ -1712,6 +1712,62 @@ paths:
             '*/*':
               schema:
                 type: object
+  /api/v1/parties/{partyId}/industry-classifications:
+    post:
+      tags:
+      - Industry classifications
+      summary: Store an industry classification
+      description: Records a classification scheme and code.
+      operationId: createIndustryClassification
+      parameters:
+      - name: partyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IndustryClassificationRequest"
+      responses:
+        "200":
+          description: OK
+  /api/v1/parties/{partyId}/attributes:
+    post:
+      tags:
+      - Party attributes
+      summary: Store a party attribute
+      description: Employment, housing, loans, and debts are attributes.
+      operationId: createPartyAttribute
+      parameters:
+      - name: partyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartyAttributeRequest"
+      responses:
+        "200":
+          description: OK
 components:
   schemas:
     UpdatePartyRelationshipCommand:
@@ -1751,7 +1807,7 @@ components:
           format: date-time
     UpdateCustomerCommand:
       required:
-      - familyName1
+      - familyName
       - givenName
       - partyId
       type: object
@@ -1768,9 +1824,9 @@ components:
           type: string
         middleName:
           type: string
-        familyName1:
+        familyName:
           type: string
-        familyName2:
+        secondFamilyName:
           type: string
         dateOfBirth:
           type: string
@@ -1814,30 +1870,6 @@ components:
         numberOfChildren:
           type: integer
           format: int32
-        employmentStatus:
-          type: string
-        employmentType:
-          type: string
-        employer:
-          type: string
-        employmentStartDate:
-          type: string
-          format: date
-        annualPaydays:
-          type: integer
-          format: int32
-        housingType:
-          type: string
-        housingCost:
-          type: number
-        housingStartDate:
-          type: string
-          format: date
-        existingLoans:
-          type: integer
-          format: int32
-        otherDebts:
-          type: number
         createdAt:
           type: string
           format: date-time
@@ -2014,8 +2046,6 @@ components:
           type: string
         annualRevenue:
           type: number
-        cnaeCode:
-          type: string
         contactName:
           type: string
         contactPosition:
@@ -2308,7 +2338,7 @@ components:
           format: date-time
     RegisterNaturalPersonCommand:
       required:
-      - familyName1
+      - familyName
       - givenName
       - partyId
       type: object
@@ -2325,9 +2355,9 @@ components:
           type: string
         middleName:
           type: string
-        familyName1:
+        familyName:
           type: string
-        familyName2:
+        secondFamilyName:
           type: string
         dateOfBirth:
           type: string
@@ -2371,30 +2401,6 @@ components:
         numberOfChildren:
           type: integer
           format: int32
-        employmentStatus:
-          type: string
-        employmentType:
-          type: string
-        employer:
-          type: string
-        employmentStartDate:
-          type: string
-          format: date
-        annualPaydays:
-          type: integer
-          format: int32
-        housingType:
-          type: string
-        housingCost:
-          type: number
-        housingStartDate:
-          type: string
-          format: date
-        existingLoans:
-          type: integer
-          format: int32
-        otherDebts:
-          type: number
         createdAt:
           type: string
           format: date-time
@@ -2747,8 +2753,6 @@ components:
           type: string
         annualRevenue:
           type: number
-        cnaeCode:
-          type: string
         contactName:
           type: string
         contactPosition:
@@ -2765,7 +2769,7 @@ components:
           format: date-time
     NaturalPersonDTO:
       required:
-      - familyName1
+      - familyName
       - givenName
       - partyId
       type: object
@@ -2782,9 +2786,9 @@ components:
           type: string
         middleName:
           type: string
-        familyName1:
+        familyName:
           type: string
-        familyName2:
+        secondFamilyName:
           type: string
         dateOfBirth:
           type: string
@@ -2828,30 +2832,6 @@ components:
         numberOfChildren:
           type: integer
           format: int32
-        employmentStatus:
-          type: string
-        employmentType:
-          type: string
-        employer:
-          type: string
-        employmentStartDate:
-          type: string
-          format: date
-        annualPaydays:
-          type: integer
-          format: int32
-        housingType:
-          type: string
-        housingCost:
-          type: number
-        housingStartDate:
-          type: string
-          format: date
-        existingLoans:
-          type: integer
-          format: int32
-        otherDebts:
-          type: number
         createdAt:
           type: string
           format: date-time
@@ -2943,8 +2923,6 @@ components:
           type: string
         annualRevenue:
           type: number
-        cnaeCode:
-          type: string
         contactName:
           type: string
         contactPosition:
@@ -3560,4 +3538,44 @@ components:
           type: integer
           format: int32
         applicableProduct:
+          type: string
+
+    IndustryClassificationRequest:
+      required:
+      - classificationScheme
+      - classificationCode
+      type: object
+      properties:
+        classificationScheme:
+          type: string
+          enum:
+          - ISIC
+          - NACE
+          - NAICS
+          - SIC
+          - CNAE
+          - OTHER
+        classificationCode:
+          type: string
+        isPrimary:
+          type: boolean
+    PartyAttributeRequest:
+      required:
+      - attributeKey
+      - attributeType
+      - attributeValue
+      type: object
+      properties:
+        attributeKey:
+          type: string
+        attributeType:
+          type: string
+          enum:
+          - STRING
+          - NUMBER
+          - DATE
+          - BOOLEAN
+        attributeValue:
+          type: string
+        currencyCode:
           type: string

@@ -1,5 +1,7 @@
 package io.fireflysoftware.domain.people.core.customer.commands;
 
+import io.fireflysoftware.domain.people.core.attribute.commands.RegisterPartyAttributeCommand;
+import io.fireflysoftware.domain.people.core.classification.commands.RegisterPartyIndustryClassificationCommand;
 import io.fireflysoftware.domain.people.core.party.commands.RegisterPartyCommand;
 import io.fireflysoftware.domain.people.core.status.commands.RegisterPartyStatusEntryCommand;
 import io.fireflysoftware.domain.people.core.compliance.commands.RegisterPepCommand;
@@ -39,5 +41,7 @@ public record RegisterCustomerCommand(
         List<RegisterConsentCommand> consents, //Natural person only
         List<RegisterPartyProviderCommand> providers,
         List<RegisterPartyRelationshipCommand> relationships,
-        List<RegisterPartyGroupMembershipCommand> groupMemberships
+        List<RegisterPartyGroupMembershipCommand> groupMemberships,
+        List<RegisterPartyIndustryClassificationCommand> industryClassifications,
+        List<RegisterPartyAttributeCommand> attributes
 ) {}

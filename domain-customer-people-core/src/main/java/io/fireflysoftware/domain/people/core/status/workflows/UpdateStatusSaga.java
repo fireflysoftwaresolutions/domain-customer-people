@@ -1,42 +1,91 @@
 package io.fireflysoftware.domain.people.core.status.workflows;
 
-import org.fireflyframework.cqrs.command.CommandBus;
+import io.fireflysoftware.core.customer.sdk.model.FilterRequestPartyStatusDTO;
+import io.fireflysoftware.core.customer.sdk.model.PaginationRequest;
+import io.fireflysoftware.core.customer.sdk.model.PaginationResponse;
+import io.fireflysoftware.core.customer.sdk.model.PartyStatusDTO;
+import io.fireflysoftware.domain.people.core.status.commands.RegisterPartyStatusEntryCommand;
+import io.fireflysoftware.domain.people.core.status.commands.RemovePartyStatusEntryCommand;
 import io.fireflysoftware.domain.people.core.status.commands.UpdateStatusCommand;
+import org.fireflyframework.cqrs.command.CommandBus;
+import org.fireflyframework.orchestration.core.context.ExecutionContext;
 import org.fireflyframework.orchestration.saga.annotation.Saga;
 import org.fireflyframework.orchestration.saga.annotation.SagaStep;
 import org.fireflyframework.orchestration.saga.annotation.StepEvent;
-import org.fireflyframework.orchestration.core.context.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.*;
-
+import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.EVENT_STATUS_UPDATED;
+import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.SAGA_UPDATE_EMAIL_NAME;
+import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.STEP_UPDATE_STATUS;
 
 /**
- * Saga orchestrator for updating customer email processes.
- * 
- * This orchestrator manages the distributed transaction for updating customer emails,
- * coordinating the email update step. The step is designed
- * to be compensatable to ensure data consistency in case of failures.
+ * Changes party status through the customer core. The core closes the open status
+ * row and opens a new one. Compensation deletes that new history row and opens
+ * the previous status again.
  */
 @Saga(name = SAGA_UPDATE_EMAIL_NAME)
 @Service
 public class UpdateStatusSaga {
 
+    private static final String PREVIOUS = "previousPartyStatus";
+
     private final CommandBus commandBus;
+    private final io.fireflysoftware.core.customer.sdk.api.PartyStatusesApi partyStatusesApi;
 
     @Autowired
-    public UpdateStatusSaga(CommandBus commandBus) {
+    public UpdateStatusSaga(CommandBus commandBus,
+                            io.fireflysoftware.core.customer.sdk.api.PartyStatusesApi partyStatusesApi) {
         this.commandBus = commandBus;
+        this.partyStatusesApi = partyStatusesApi;
     }
 
-    @SagaStep(id = STEP_UPDATE_STATUS)
+    @SagaStep(id = "readOpenPartyStatus")
+    @StepEvent(type = "status.read")
+    public Mono<PartyStatusDTO> readOpenPartyStatus(UpdateStatusCommand cmd, ExecutionContext ctx) {
+        FilterRequestPartyStatusDTO filter = new FilterRequestPartyStatusDTO()
+                .pagination(new PaginationRequest().pageNumber(0).pageSize(50));
+        return partyStatusesApi.filterPartyStatuses(cmd.getPartyId(), filter, UUID.randomUUID().toString())
+                .map(page -> openStatus(page, cmd.getPartyId()))
+                .doOnNext(previous -> ctx.putVariable(PREVIOUS, previous));
+    }
+
+    @SagaStep(id = STEP_UPDATE_STATUS, dependsOn = "readOpenPartyStatus", compensate = "compensateStatusChange")
     @StepEvent(type = EVENT_STATUS_UPDATED)
     public Mono<UUID> updateStatus(UpdateStatusCommand cmd, ExecutionContext ctx) {
+        ctx.putVariable("statusPartyId", cmd.getPartyId());
         return commandBus.send(cmd);
     }
 
+    public Mono<Void> compensateStatusChange(UUID newStatusId, ExecutionContext ctx) {
+        if (newStatusId == null) {
+            return Mono.empty();
+        }
+        UUID partyId = ctx.getVariableAs("statusPartyId", UUID.class);
+        PartyStatusDTO previous = ctx.getVariableAs(PREVIOUS, PartyStatusDTO.class);
+        Mono<Void> deleteNew = commandBus.send(new RemovePartyStatusEntryCommand(partyId, newStatusId));
+        if (previous == null || previous.getStatusCode() == null) {
+            return deleteNew;
+        }
+        RegisterPartyStatusEntryCommand restore = new RegisterPartyStatusEntryCommand();
+        restore.setPartyId(partyId);
+        restore.setStatusCode(previous.getStatusCode());
+        restore.setStatusReason(previous.getStatusReason());
+        return deleteNew.then(commandBus.send(restore)).then();
+    }
+
+    private static PartyStatusDTO openStatus(PaginationResponse page, UUID partyId) {
+        if (page == null || page.getContent() == null) {
+            return new PartyStatusDTO().partyId(partyId);
+        }
+        return page.getContent().stream()
+                .filter(PartyStatusDTO.class::isInstance)
+                .map(PartyStatusDTO.class::cast)
+                .filter(status -> status.getValidTo() == null)
+                .findFirst()
+                .orElseGet(() -> new PartyStatusDTO().partyId(partyId));
+    }
 }

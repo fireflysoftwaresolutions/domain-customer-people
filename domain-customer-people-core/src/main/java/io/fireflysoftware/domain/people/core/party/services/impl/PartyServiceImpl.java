@@ -38,8 +38,10 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public Mono<SagaResult> updatePartyRelationship(UpdatePartyRelationshipCommand command, UUID relationId) {
+        UpdatePartyRelationshipCommand prepared = command.withPartyRelationshipId(relationId);
         StepInputs inputs = StepInputs.builder()
-                .forStepId("updatePartyRelationship", command.withPartyRelationshipId(relationId))
+                .forStepId("readPartyRelationship", prepared)
+                .forStepId("updatePartyRelationship", prepared)
                 .build();
 
         return engine.execute("UpdatePartyRelationshipSaga", inputs);
