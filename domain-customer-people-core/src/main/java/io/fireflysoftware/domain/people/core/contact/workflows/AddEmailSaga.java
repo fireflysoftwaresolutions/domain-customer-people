@@ -19,6 +19,7 @@ package io.fireflysoftware.domain.people.core.contact.workflows;
 
 import org.fireflyframework.cqrs.command.CommandBus;
 import io.fireflysoftware.domain.people.core.contact.commands.RegisterEmailCommand;
+import io.fireflysoftware.domain.people.core.contact.commands.RemoveEmailCommand;
 import org.fireflyframework.orchestration.saga.annotation.Saga;
 import org.fireflyframework.orchestration.saga.annotation.SagaStep;
 import org.fireflyframework.orchestration.saga.annotation.StepEvent;
@@ -29,6 +30,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+import static io.fireflysoftware.domain.people.core.utils.constants.GlobalConstants.CTX_PARTY_ID;
 import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.*;
 
 /**
@@ -49,10 +51,21 @@ public class AddEmailSaga {
         this.commandBus = commandBus;
     }
 
-    @SagaStep(id = STEP_REGISTER_EMAIL)
+    @SagaStep(id = STEP_REGISTER_EMAIL, compensate = COMPENSATE_REMOVE_EMAIL)
     @StepEvent(type = EVENT_EMAIL_REGISTERED)
     public Mono<UUID> registerEmail(RegisterEmailCommand cmd, ExecutionContext ctx) {
+        if (cmd.getPartyId() != null) {
+            ctx.putVariable(CTX_PARTY_ID, cmd.getPartyId());
+        }
         return commandBus.send(cmd);
+    }
+
+    public Mono<Void> removeEmail(UUID emailId, ExecutionContext ctx) {
+        UUID partyId = (UUID) ctx.getVariable(CTX_PARTY_ID);
+        if (emailId == null || partyId == null) {
+            return Mono.empty();
+        }
+        return commandBus.send(new RemoveEmailCommand(partyId, emailId));
     }
 
 }

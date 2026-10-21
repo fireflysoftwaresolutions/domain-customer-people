@@ -19,6 +19,7 @@ package io.fireflysoftware.domain.people.core.contact.workflows;
 
 import org.fireflyframework.cqrs.command.CommandBus;
 import io.fireflysoftware.domain.people.core.contact.commands.RegisterAddressCommand;
+import io.fireflysoftware.domain.people.core.contact.commands.RemoveAddressCommand;
 import org.fireflyframework.orchestration.saga.annotation.Saga;
 import org.fireflyframework.orchestration.saga.annotation.SagaStep;
 import org.fireflyframework.orchestration.saga.annotation.StepEvent;
@@ -29,6 +30,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+import static io.fireflysoftware.domain.people.core.utils.constants.GlobalConstants.CTX_PARTY_ID;
 import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.*;
 
 /**
@@ -49,10 +51,21 @@ public class AddAddressSaga {
         this.commandBus = commandBus;
     }
 
-    @SagaStep(id = STEP_REGISTER_ADDRESS)
+    @SagaStep(id = STEP_REGISTER_ADDRESS, compensate = COMPENSATE_REMOVE_ADDRESS)
     @StepEvent(type = EVENT_ADDRESS_REGISTERED)
     public Mono<UUID> registerAddress(RegisterAddressCommand cmd, ExecutionContext ctx) {
+        if (cmd.getPartyId() != null) {
+            ctx.putVariable(CTX_PARTY_ID, cmd.getPartyId());
+        }
         return commandBus.send(cmd);
+    }
+
+    public Mono<Void> removeAddress(UUID addressId, ExecutionContext ctx) {
+        UUID partyId = (UUID) ctx.getVariable(CTX_PARTY_ID);
+        if (addressId == null || partyId == null) {
+            return Mono.empty();
+        }
+        return commandBus.send(new RemoveAddressCommand(partyId, addressId));
     }
 
 }

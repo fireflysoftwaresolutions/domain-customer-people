@@ -19,6 +19,7 @@ package io.fireflysoftware.domain.people.core.party.workflows;
 
 import org.fireflyframework.cqrs.command.CommandBus;
 import io.fireflysoftware.domain.people.core.party.commands.RegisterPartyRelationshipCommand;
+import io.fireflysoftware.domain.people.core.party.commands.RemovePartyRelationshipCommand;
 import org.fireflyframework.orchestration.saga.annotation.Saga;
 import org.fireflyframework.orchestration.saga.annotation.SagaStep;
 import org.fireflyframework.orchestration.saga.annotation.StepEvent;
@@ -54,9 +55,16 @@ public class RegisterPartyRelationshipSaga {
         this.commandBus = commandBus;
     }
 
-    @SagaStep(id = STEP_REGISTER_PARTY_RELATIONSHIP)
+    @SagaStep(id = STEP_REGISTER_PARTY_RELATIONSHIP, compensate = COMPENSATE_REMOVE_PARTY_RELATIONSHIP)
     @StepEvent(type = EVENT_PARTY_RELATIONSHIP_REGISTERED)
     public Mono<UUID> registerPartyRelationship(RegisterPartyRelationshipCommand cmd, ExecutionContext ctx) {
         return commandBus.send(cmd);
+    }
+
+    public Mono<Void> removePartyRelationship(UUID partyRelationshipId, ExecutionContext ctx) {
+        if (partyRelationshipId == null) {
+            return Mono.empty();
+        }
+        return commandBus.send(new RemovePartyRelationshipCommand(partyRelationshipId));
     }
 }

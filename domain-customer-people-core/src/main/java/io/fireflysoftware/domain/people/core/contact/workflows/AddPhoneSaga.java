@@ -19,6 +19,7 @@ package io.fireflysoftware.domain.people.core.contact.workflows;
 
 import org.fireflyframework.cqrs.command.CommandBus;
 import io.fireflysoftware.domain.people.core.contact.commands.RegisterPhoneCommand;
+import io.fireflysoftware.domain.people.core.contact.commands.RemovePhoneCommand;
 import org.fireflyframework.orchestration.saga.annotation.Saga;
 import org.fireflyframework.orchestration.saga.annotation.SagaStep;
 import org.fireflyframework.orchestration.saga.annotation.StepEvent;
@@ -29,6 +30,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+import static io.fireflysoftware.domain.people.core.utils.constants.GlobalConstants.CTX_PARTY_ID;
 import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.*;
 
 /**
@@ -49,10 +51,21 @@ public class AddPhoneSaga {
         this.commandBus = commandBus;
     }
 
-    @SagaStep(id = STEP_REGISTER_PHONE)
+    @SagaStep(id = STEP_REGISTER_PHONE, compensate = COMPENSATE_REMOVE_PHONE)
     @StepEvent(type = EVENT_PHONE_REGISTERED)
     public Mono<UUID> registerPhone(RegisterPhoneCommand cmd, ExecutionContext ctx) {
+        if (cmd.getPartyId() != null) {
+            ctx.putVariable(CTX_PARTY_ID, cmd.getPartyId());
+        }
         return commandBus.send(cmd);
+    }
+
+    public Mono<Void> removePhone(UUID phoneId, ExecutionContext ctx) {
+        UUID partyId = (UUID) ctx.getVariable(CTX_PARTY_ID);
+        if (phoneId == null || partyId == null) {
+            return Mono.empty();
+        }
+        return commandBus.send(new RemovePhoneCommand(partyId, phoneId));
     }
 
 }
