@@ -36,7 +36,6 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.EVENT_STATUS_UPDATED;
-import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.SAGA_UPDATE_EMAIL_NAME;
 import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCustomerConstants.STEP_UPDATE_STATUS;
 
 /**
@@ -44,7 +43,7 @@ import static io.fireflysoftware.domain.people.core.utils.constants.RegisterCust
  * row and opens a new one. Compensation deletes that new history row and opens
  * the previous status again.
  */
-@Saga(name = SAGA_UPDATE_EMAIL_NAME)
+@Saga(name = "UpdateStatusSaga")
 @Service
 public class UpdateStatusSaga {
 
