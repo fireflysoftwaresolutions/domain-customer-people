@@ -7,13 +7,13 @@
     <parent>
         <groupId>io.fireflysoftware</groupId>
         <artifactId>firefly-parent</artifactId>
-        <version>26.10.5</version>
+        <version>26.10.6</version>
         <relativePath/>
     </parent>
 
     <artifactId>domain-customer-people</artifactId>
     <name>domain-customer-people</name>
-    <version>26.10.5</version>
+    <version>26.10.6</version>
     <packaging>pom</packaging>
     <modules>
         <module>domain-customer-people-core</module>
@@ -29,7 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <core-common-reference-master-data.version>
-            26.10.5
+            26.10.6
         </core-common-reference-master-data.version>
     </properties>
 
