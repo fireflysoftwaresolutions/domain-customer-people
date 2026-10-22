@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -141,7 +142,9 @@ class CustomersControllerTest {
     void testAddCustomerAddress_ShouldReturnOkResponse() {
         // Given
         UUID partyId = UUID.randomUUID();
+        UUID addressId = UUID.randomUUID();
         RegisterAddressCommand command = mock(RegisterAddressCommand.class);
+        when(sagaResult.resultOf("registerAddress", UUID.class)).thenReturn(java.util.Optional.of(addressId));
         when(contactService.addAddress(partyId, command))
                 .thenReturn(Mono.just(sagaResult));
 
@@ -150,7 +153,10 @@ class CustomersControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(200, response.getStatusCode().value()))
+                .assertNext(response -> {
+                    assertEquals(200, response.getStatusCode().value());
+                    assertEquals(addressId.toString(), ((Map<?, ?>) response.getBody()).get("addressId"));
+                })
                 .verifyComplete();
 
         verify(contactService).addAddress(partyId, command);

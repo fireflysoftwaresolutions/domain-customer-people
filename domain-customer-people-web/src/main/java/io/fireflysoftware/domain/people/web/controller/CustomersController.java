@@ -131,7 +131,12 @@ public class CustomersController {
             @PathVariable("partyId") UUID partyId,
             @RequestBody RegisterAddressCommand addressCommand) {
         return contactService.addAddress(partyId, addressCommand)
-                .thenReturn(ResponseEntity.ok().build());
+                .map(saga -> {
+                    Map<String, Object> body = new HashMap<>();
+                    saga.resultOf("registerAddress", UUID.class)
+                            .ifPresent(id -> body.put("addressId", id.toString()));
+                    return ResponseEntity.ok((Object) body);
+                });
     }
 
     @PutMapping("/{partyId}/addresses/{addressId}")
